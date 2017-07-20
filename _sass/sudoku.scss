@@ -1,0 +1,151 @@
+$sudoku-puzzle-row-color: #DE8885;
+$sudoku-puzzle-column-color: #CCCB8F;
+$sudoku-puzzle-block-color: #4EBCFF;
+$sudoku-puzzle-arrow-size: 1.4em;
+$sudoku-puzzle-border-thickness: 4px;
+$sudoku-puzzle-grid-major-thickness: 3px;
+$sudoku-puzzle-grid-minor-thickness: 1px;
+
+table.sudoku-puzzle {
+	font-family: monospace;
+	border-collapse: collapse;
+	margin: 0 auto;
+	border: none;
+}
+
+table.sudoku-puzzle tr td {
+	width: 2em;
+	height: 2em;
+	text-align: center;
+	border: $sudoku-puzzle-grid-minor-thickness solid $text-color;
+	padding: inherit;
+}
+
+table.sudoku-puzzle:not(.sudoku-puzzle-labeled) tr:nth-child(1) td {
+	height: 0;
+}
+
+table.sudoku-puzzle tr td:nth-child(2) {
+	border-left: $sudoku-puzzle-border-thickness solid $text-color;
+}
+
+table.sudoku-puzzle tr td:nth-child(10) {
+	border-right: $sudoku-puzzle-border-thickness solid $text-color;
+}
+
+table.sudoku-puzzle tr:nth-child(2) td {
+	border-top: $sudoku-puzzle-border-thickness solid $text-color;
+}
+
+table.sudoku-puzzle tr:nth-child(10) td {
+	border-bottom: $sudoku-puzzle-border-thickness solid $text-color;
+}
+
+table.sudoku-puzzle tr:nth-child(4) td,
+table.sudoku-puzzle tr:nth-child(7) td {
+	border-bottom: $sudoku-puzzle-grid-major-thickness solid $text-color;
+}
+
+table.sudoku-puzzle tr td:nth-child(4),
+table.sudoku-puzzle tr td:nth-child(7) {
+	border-right: $sudoku-puzzle-grid-major-thickness solid $text-color;
+}
+
+table.sudoku-puzzle.sudoku-puzzle-labeled tr:nth-child(8) td {
+	background-color: $sudoku-puzzle-row-color;
+}
+
+table.sudoku-puzzle.sudoku-puzzle-labeled tr td:nth-child(4) {
+	background-color: $sudoku-puzzle-column-color;
+}
+
+table.sudoku-puzzle.sudoku-puzzle-labeled tr:nth-child(8) td:nth-child(4) {
+	background-color: mix($sudoku-puzzle-row-color,#000,33) + mix($sudoku-puzzle-column-color,#000,33) + mix($sudoku-puzzle-block-color,#000,33);
+}
+
+table.sudoku-puzzle.sudoku-puzzle-labeled tr:nth-child(8) td:nth-child(2),
+table.sudoku-puzzle.sudoku-puzzle-labeled tr:nth-child(8) td:nth-child(3) {
+	background-color: mix($sudoku-puzzle-row-color,$sudoku-puzzle-block-color);
+}
+
+table.sudoku-puzzle.sudoku-puzzle-labeled tr:nth-child(9) td:nth-child(4),
+table.sudoku-puzzle.sudoku-puzzle-labeled tr:nth-child(10) td:nth-child(4) {
+	background-color: mix($sudoku-puzzle-column-color,$sudoku-puzzle-block-color);
+}
+
+table.sudoku-puzzle.sudoku-puzzle-labeled tr:nth-child(9) td:nth-child(2),
+table.sudoku-puzzle.sudoku-puzzle-labeled tr:nth-child(9) td:nth-child(3),
+table.sudoku-puzzle.sudoku-puzzle-labeled tr:nth-child(10) td:nth-child(2),
+table.sudoku-puzzle.sudoku-puzzle-labeled tr:nth-child(10) td:nth-child(3) {
+	background-color: $sudoku-puzzle-block-color;
+}
+
+table.sudoku-puzzle tr:nth-child(1) td,
+table.sudoku-puzzle tr td:nth-child(1),
+table.sudoku-puzzle tr td:nth-child(11),
+table.sudoku-puzzle.sudoku-puzzle-labeled tr:nth-child(1) td,
+table.sudoku-puzzle.sudoku-puzzle-labeled tr td:nth-child(1),
+table.sudoku-puzzle.sudoku-puzzle-labeled tr td:nth-child(11) {
+	border: inherit;
+	background-color: inherit;
+}
+
+table.sudoku-puzzle.sudoku-puzzle-labeled tr td span.sudoku-puzzle-row {
+	background-color: $sudoku-puzzle-row-color;
+	float: right;
+	margin-left: $sudoku-puzzle-arrow-size;
+	line-height: 2em;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+table.sudoku-puzzle.sudoku-puzzle-labeled tr td div.sudoku-puzzle-row-arrow {
+	width: 0;
+	height: 0;
+	border-top: 1em solid transparent;
+	border-bottom: 1em solid transparent;
+	border-right: $sudoku-puzzle-arrow-size solid $sudoku-puzzle-row-color;
+}
+
+table.sudoku-puzzle.sudoku-puzzle-labeled tr td div.sudoku-puzzle-column {
+	background-color: $sudoku-puzzle-column-color;
+	line-height: 2em;
+	display: inline-block;
+	padding-left: 1em;
+	padding-right: 1em;
+}
+
+table.sudoku-puzzle.sudoku-puzzle-labeled tr td div.sudoku-puzzle-column-arrow {
+	width: 0;
+	height: 0;
+	border-left: 1em solid transparent;
+	border-right: 1em solid transparent;
+	border-top: $sudoku-puzzle-arrow-size solid $sudoku-puzzle-column-color;
+	margin: 0 auto;
+}
+
+table.sudoku-puzzle.sudoku-puzzle-labeled tr td div.sudoku-puzzle-block {
+	background-color: $sudoku-puzzle-block-color;
+	margin-right: $sudoku-puzzle-arrow-size;
+	line-height: 2em;
+	padding-left: 1em;
+	padding-right: 1em;
+	position: relative;
+}
+
+table.sudoku-puzzle.sudoku-puzzle-labeled tr td div.sudoku-puzzle-block-arrow {
+	width: 0;
+	height: 0;
+	border-top: 1em solid transparent;
+	border-bottom: 1em solid transparent;
+	border-left: $sudoku-puzzle-arrow-size solid $sudoku-puzzle-block-color;
+	position: absolute;
+	top: 0;
+	right: -$sudoku-puzzle-arrow-size;
+}
+
+table.sudoku-puzzle + em {
+	text-align: center;
+	display: block;
+}
+ 

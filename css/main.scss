@@ -1,0 +1,137 @@
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+---
+@charset "utf-8";
+
+// Our variables
+$base-font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+$base-font-size:   16px;
+$base-font-weight: 400;
+$small-font-size:  $base-font-size * 0.875;
+$base-line-height: 1.5;
+
+$spacing-unit:     30px;
+
+$text-color:       #111;
+$background-color: #fdfdfd;
+$brand-color:      #2a7ae2;
+
+$grey-color:       #828282;
+$grey-color-light: lighten($grey-color, 40%);
+$grey-color-dark:  darken($grey-color, 25%);
+
+// Width of the content area
+$content-width:    800px;
+
+$on-palm:          600px;
+$on-laptop:        800px;
+
+// Minima also includes a mixin for defining media queries.
+// Use media queries like this:
+// @include media-query($on-palm) {
+//     .wrapper {
+//         padding-right: $spacing-unit / 2;
+//         padding-left: $spacing-unit / 2;
+//     }
+// }
+
+// Import partials from the `minima` theme.
+@import "minima";
+
+a {
+	color: #d33418;
+}
+
+a:hover,
+a:visited {
+	color: #af3537;
+}
+
+h3 {
+	color: #C01700;
+}
+
+li > ul {
+	margin-bottom: $spacing-unit / 2;
+}
+
+p img {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.site-nav .page-link {
+	line-height: 4em;
+}
+
+header.site-header,
+footer.site-footer {
+	background-color: #f1f2f3;
+}
+
+header.site-header {
+	border-top: none;
+	border-bottom: 1px solid #a6a6a6;
+}
+
+footer.site-footer {
+	border-top: 1px solid #a6a6a6;
+}
+
+header.site-header a.site-title {
+	color: #D33418;
+	margin-top: $spacing-unit / 4;
+	margin-bottom: $spacing-unit / 4;
+	line-height: normal;
+}
+
+div.pagination {
+	.page_numbers, .next, .previous {
+		width: 32.9%;
+		display: inline-block
+	}
+
+	.page_numbers {
+		text-align: center;
+	}
+
+	.next {
+		text-align: right;
+	}
+}
+
+div.review {
+	background-color: #FFF6F6;
+	border: solid 2px #C01700;
+	margin-bottom: $spacing-unit / 2;
+}
+
+div.review h4 {
+	padding-left: $spacing-unit / 2;
+	background-color: #C01700;
+	color: #f0f0f0;
+}
+
+div.review p {
+	margin-left: $spacing-unit / 2;
+	margin-right: $spacing-unit / 2;
+}
+
+table {
+	border: solid 2px #C01700;
+	border-spacing: 0px;
+	margin-bottom: $spacing-unit / 2;
+
+	th {
+		background-color: #FFF6F6;
+	}
+
+	th, td {
+		border: solid 1px #C01700;
+		padding: $spacing-unit / 4;
+	}
+}
+
+@import "syntax-highlighting";
+@import "sudoku";
