@@ -6,9 +6,9 @@ date: 2017-07-20 12:39:00 -0500
 
 ![Screenshot]({{ "/assets/sudokusolverar/screenshot.png" | relative_url }})
 
-So you're working on a sudoku problem and it dawns on you how repetitive the process is. You run out of obvious moves so you make a guess and continue on like that's the correct answer. A little later on you find out that you were wrong so you undo everything since your last guess, make another guess and continue on. Rinse and repeat until the puzzle is solved. Of course, as a programmer, you realize a program could do this much faster and it might even be more fun to write than doing the puzzle itself. Of course, having written said program, you've conquered Sudoku and will never touch another puzzle.
+So you're working on a Sudoku problem and it dawns on you how repetitive the process is. You run out of obvious moves so you make a guess and continue on like that's the correct answer. A little later on you find out that you were wrong so you undo everything since your last guess, make another guess and continue on. Rinse and repeat until the puzzle is solved. Of course, as a programmer, you realize a program could do this much faster and it might even be more fun to write than doing the puzzle itself. Of course, having written said program, you've conquered Sudoku and will never touch another puzzle.
 
-This is the start of a series of posts covering how to build an augmented reality sudoku solver. The idea is to point a camera at a puzzle, have the computer find the puzzle, figure out which numbers are in which spots, solve the puzzle, and then display the answer over the original puzzle when displayed on a computer screen.
+This is the start of a series of posts covering how to build an augmented reality Sudoku solver. The idea is to point a camera at a puzzle, have the computer find the puzzle, figure out which numbers are in which spots, solve the puzzle, and then display the answer over the original puzzle when displayed on a computer screen.
 
 I'm going to be doing all of the processing from scratch. No computer vision libraries like OpenCV nor machine learning tools like TensorFlow will be used. This is an educational endeavor to cover how everything works. For serious projects, just use a battle tested library and save yourself the headaches.
 
