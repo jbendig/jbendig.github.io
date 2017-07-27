@@ -19,7 +19,7 @@ All of the code is going to be in C++ and I'm going to assume basic knowledge of
 The source code for a complete working example can found on the [Sudoku Solver AR](https://github.com/jbendig/Sudoku-Solver-AR) GitHub page. The code is written for Linux and Windows but only the camera capture, window display, and some basic OpenGL parts are platform specific.
 
 1. [About]({% post_url 2017-07-20-sudoku-solver-ar-part-1-about %})
-2. Sudoku
+2. [Sudoku]({% post_url 2017-07-27-sudoku-solver-ar-part-2-sudoku %})
 3. Image Processing
 4. Camera Capture (Linux)
 5. Camera Capture (Windows)
