@@ -26,7 +26,7 @@ The source code for a complete working example can found on the [Sudoku Solver A
 6. Canny Part 1 (Gaussian)
 7. Canny Part 2 (Sobel)
 8. Canny Part 3 (Non-Maximum Suppression)
-9. Canny Part 4 (Line Thinning)
+9. Canny Part 4 (Connectivity Analysis)
 10. Hough Transform
 11. Finding Lines
 12. Finding Puzzles
