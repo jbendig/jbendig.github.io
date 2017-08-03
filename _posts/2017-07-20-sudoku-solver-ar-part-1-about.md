@@ -20,7 +20,7 @@ The source code for a complete working example can found on the [Sudoku Solver A
 
 1. [About]({% post_url 2017-07-20-sudoku-solver-ar-part-1-about %})
 2. [Sudoku]({% post_url 2017-07-27-sudoku-solver-ar-part-2-sudoku %})
-3. Image Processing
+3. [A Crash Course in Image Processing]({% post_url 2017-08-03-sudoku-solver-ar-part-3-a-crash-course-in-image-processing %})
 4. Camera Capture (Linux)
 5. Camera Capture (Windows)
 6. Canny Part 1 (Gaussian)
