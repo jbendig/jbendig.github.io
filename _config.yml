@@ -33,5 +33,6 @@ sass:
 
 gems:
     - jekyll-paginate
+    - jekyll-redirect-from
 
 paginate: 5

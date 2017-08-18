@@ -2,6 +2,7 @@
 layout: post
 title: "Sudoku Solver AR Part 5: Camera Capture (Windows)"
 date: 2017-08-17 10:15:00 -0500
+redirect_from: "/2017/08/17/sodoku-solver-ar-part-5-camera-capture-windows/"
 ---
 
 _This post is part of a series where I explain how to build an **augmented reality Sudoku solver**. All of the image processing and computer vision is done from scratch. See the [first post]({% post_url 2017-07-20-sudoku-solver-ar-part-1-about %}) for a complete list of topics._ 
