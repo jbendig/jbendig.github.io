@@ -1,0 +1,268 @@
+<div style="float: left;">
+  <table id="gaussianblur-controls" style="width: 100%; border: 0; margin-bottom: 0;">
+    <tr>
+		<td style="border: 0;"><label for="gaussianblur-r">`r`:</label></td>
+		<td style="border: 0;"><input style="width: 100%;" id="gaussianblur-r" type="range" min="0" max="25" step="0.1" value="5" oninput="UpdateFigures()" onchange="UpdateFigures()"></td>
+		<td style="border: 0; padding-left: 1em;"><span id="gaussianblur-r-text"></span></td>
+	</tr>
+	<tr>
+		<td style="border: 0;"><label for="gaussianblur-a">`a`:</label></td>
+		<td style="border: 0;"><input style="width: 100%;" id="gaussianblur-a" type="range" min="1" max="10" step="1" value="3" oninput="UpdateFigures()" onchange="UpdateFigures()"></td>
+		<td style="border: 0; padding-left: 1em;"><span id="gaussianblur-a-text"></span></td>
+	</tr>
+  </table>
+  <canvas id="curve-canvas"></canvas>
+</div>
+<canvas style="float: right;" id="gaussianblur-canvas"></canvas>
+<div style="clear: both; margin-bottom: 15px;"></div>
+
+<noscript><p>Enable Javascript to use interactive Gaussian blur demo.</p></noscript>
+
+<script>
+//This code is pretty much what's in the article. It's just messier because there's an interactive
+//demo and ... you know ... it's javascript.
+
+var gaussianBlurControlsTable = document.getElementById("gaussianblur-controls");
+var gaussianBlurRSlider = document.getElementById("gaussianblur-r");
+var gaussianBlurASlider = document.getElementById("gaussianblur-a");
+var gaussianBlurRText = document.getElementById("gaussianblur-r-text");
+var gaussianBlurAText = document.getElementById("gaussianblur-a-text");
+var curveCanvas = document.getElementById("curve-canvas");
+var curveContext = curveCanvas.getContext("2d");
+var gaussianBlurCanvas = document.getElementById("gaussianblur-canvas");
+var gaussianBlurContext = gaussianBlurCanvas.getContext("2d");
+var image = new Image();
+
+var gaussianKernel = [];
+var originalBitmap = null;
+var inputImageData = null;
+var tempImageData = null;
+var outputImageData = null;
+
+var BuildGaussianKernel = function(radius,sigma) {
+	radius = Math.floor(radius);
+	if(radius == 0)
+	{
+		gaussianKernel.length = 0;
+		return;
+	}
+
+	var kernelRadius = radius + 1;
+	var kernelSize = kernelRadius * 2 + 1;
+	gaussianKernel.length = kernelSize;
+	gaussianKernel.fill(0.0);
+
+	var Gaussian = function(x,sigma) {
+		return Math.exp(-(x * x)/(2 * sigma * sigma));
+	};
+
+	var sum = 0.0;
+	for(var x = 0;x < kernelSize;x++) {
+		var value = Gaussian(x - kernelRadius,sigma);
+		gaussianKernel[x] = value;
+		sum += value;
+	}
+
+	gaussianKernel.forEach(function(item,index) {
+		gaussianKernel[index] /= sum;
+	});
+};
+
+var UpdateCurve = function() {
+	if(inputImageData == null)
+		return;
+
+	//Clear background.
+	curveContext.clearRect(0,0,curveCanvas.width,curveCanvas.height);
+
+	//Figure out how many pixels to display and how big they are.
+	var pixelCount = gaussianKernel.length;
+	var pixelHeight = curveCanvas.height * 0.1;
+	var pixelHorizontalSpacing = curveCanvas.width * 0.1 / (pixelCount - 1);
+	var pixelWidth = curveCanvas.width * 0.9 / pixelCount;
+
+	//Draw pixels as a row at the bottom.
+	var kernelRadius = (gaussianKernel.length - 1) / 2;
+	for(var p = 0;p < pixelCount;p++) {
+		//Pick pixel colors from the center horizontal row of the demo image.
+		var pixelIndex = ((inputImageData.height / 2) * inputImageData.width + inputImageData.width / 2 - kernelRadius + p) * 4;
+		var red = inputImageData.data[pixelIndex + 0].toString(16);
+		var green = inputImageData.data[pixelIndex + 1].toString(16);
+		var blue = inputImageData.data[pixelIndex + 2].toString(16);
+		curveContext.fillStyle = "#" + red + green + blue;
+
+		var x = p == 0 ? 0 : p * (pixelWidth + pixelHorizontalSpacing);
+		curveContext.fillRect(x,curveCanvas.height - pixelHeight,pixelWidth,pixelHeight);
+	}
+
+	//Figure out the max size of the curve so it can be scaled when drawn.
+	var curveValueMax = 0;
+	gaussianKernel.forEach(function(item) {
+		curveValueMax = Math.max(curveValueMax,item);
+	});
+
+	//Draw curve filling the area above the pixels.
+	var curveOffsetTop = curveCanvas.height * 0.05;
+	var curveHeightMax = curveCanvas.height * 0.8;
+	var curveScaler = curveHeightMax / curveValueMax;
+	curveContext.lineWidth = 3;
+	curveContext.strokeStyle = "#C01700";
+	curveContext.lineJoin = "bevel";
+	curveContext.lineCap = "round";
+	curveContext.beginPath();
+	curveContext.moveTo(0,curveOffsetTop + curveHeightMax);
+	for(var w = 0;w < gaussianKernel.length;w++) {
+		var x = pixelWidth / 2 + w * (pixelWidth + pixelHorizontalSpacing);
+		var y = curveOffsetTop + curveHeightMax - gaussianKernel[w] * curveScaler;
+		curveContext.lineTo(x,y);
+	}
+	curveContext.lineTo(curveCanvas.width,curveOffsetTop + curveHeightMax);
+	curveContext.stroke();
+};
+
+var BlurImage = function() {
+	onmessage = function(oEvent) {
+		var inputImageData = oEvent.data[0];
+		var tempImageData = oEvent.data[1];
+		var outputImageData = oEvent.data[2];
+		var gaussianKernel = oEvent.data[3];
+
+		var kernelRadius = (gaussianKernel.length - 1) / 2;
+		var ClampToU8 = function(value) {
+			return Math.floor(Math.min(Math.max(value,0),255));
+		};
+
+		for(var x = 0;x < outputImageData.width * outputImageData.height;x++) {
+			var index = x * 4;
+			outputImageData.data[index + 0] = 0;
+			outputImageData.data[index + 1] = 0;
+			outputImageData.data[index + 2] = 0;
+			outputImageData.data[index + 3] = 255;
+		}
+
+		if(kernelRadius * 2 > inputImageData.width || kernelRadius * 2 > inputImageData.height) {
+			postMessage(outputImageData);
+			return;
+		}
+		else if(gaussianKernel.length == 0) {
+			postMessage(inputImageData);
+			return;
+		}
+
+		for(var y = 0;y < inputImageData.height;y++) {
+			for(var x = kernelRadius;x < inputImageData.width - kernelRadius;x++) {
+				var sum = [0,0,0];
+				for(var w = 0;w < gaussianKernel.length;w++) {
+					var inputIndex = (y * inputImageData.width + x + w - kernelRadius) * 4;
+					sum[0] += inputImageData.data[inputIndex + 0] * gaussianKernel[w];
+					sum[1] += inputImageData.data[inputIndex + 1] * gaussianKernel[w];
+					sum[2] += inputImageData.data[inputIndex + 2] * gaussianKernel[w];
+				}
+
+				var outputIndex = (y * inputImageData.width + x) * 4;
+				tempImageData.data[outputIndex + 0] = ClampToU8(sum[0]);
+				tempImageData.data[outputIndex + 1] = ClampToU8(sum[1]);
+				tempImageData.data[outputIndex + 2] = ClampToU8(sum[2]);
+			}
+		}
+
+		for(var y = kernelRadius;y < inputImageData.height - kernelRadius;y++) {
+			for(var x = kernelRadius;x < inputImageData.width - kernelRadius;x++) {
+				var sum = [0,0,0];
+				for(var w = 0;w < gaussianKernel.length;w++) {
+					var inputIndex = ((y + w - kernelRadius) * inputImageData.width + x) * 4;
+					sum[0] += tempImageData.data[inputIndex + 0] * gaussianKernel[w];
+					sum[1] += tempImageData.data[inputIndex + 1] * gaussianKernel[w];
+					sum[2] += tempImageData.data[inputIndex + 2] * gaussianKernel[w];
+				}
+
+				var outputIndex = (y * inputImageData.width + x) * 4;
+				outputImageData.data[outputIndex + 0] = ClampToU8(sum[0]);
+				outputImageData.data[outputIndex + 1] = ClampToU8(sum[1]);
+				outputImageData.data[outputIndex + 2] = ClampToU8(sum[2]);
+			}
+		}
+
+		postMessage(outputImageData);
+	};
+};
+
+//Helper function from:
+//https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers
+var fn2workerURL = function(fn) {
+	var blob = new Blob(['('+fn.toString()+')()'], {type: 'application/javascript'})
+	return URL.createObjectURL(blob)
+}
+
+//Web worker stuff so the browser doesn't freeze while processing.
+var worker = new Worker(fn2workerURL(BlurImage));
+var workerRunning = false;
+var workQueued = false;
+worker.onmessage = function(oEvent) {
+	gaussianBlurContext.putImageData(oEvent.data,0,0);
+	workerRunning = false;
+	QueueWork(false);
+};
+
+//Let background thread process at most one message at a time with a backlog of at most one image.
+//There's no reason to store a full queue since older work has to be discarded, wastes cycles to
+//process, and eats up memory.
+var QueueWork = function(newWork) {
+	if(newWork)
+		document.workQueued = true;
+
+	if(workerRunning || !document.workQueued)
+		return;
+
+	document.workQueued = false;
+
+	if(tempImageData == null || tempImageData.width != inputImageData.width || tempImageData.height != inputImageData.height)
+		tempImageData = gaussianBlurContext.createImageData(inputImageData.width,inputImageData.height);
+	if(outputImageData == null || outputImageData.width != inputImageData.width || outputImageData.height != inputImageData.height)
+		outputImageData = gaussianBlurContext.createImageData(inputImageData.width,inputImageData.height);
+
+	workerRunning = true;
+	worker.postMessage([inputImageData,tempImageData,outputImageData,gaussianKernel]);
+};
+
+var UpdateFigures = function() {
+	var radius = gaussianBlurRSlider.value;
+	var a = gaussianBlurASlider.value;
+	var sigma = radius / a;
+
+	gaussianBlurRText.textContent = new Number(radius).toFixed(1);
+	gaussianBlurAText.textContent = new Number(a).toFixed(1);
+
+	BuildGaussianKernel(radius,sigma);
+	UpdateCurve();
+
+	QueueWork(true);
+};
+
+var LayoutFigures = function() {
+	if(originalBitmap == null)
+		return;
+
+	gaussianBlurCanvas.width = gaussianBlurCanvas.parentElement.clientWidth * 8 / 15;
+	gaussianBlurCanvas.height = image.height / image.width * gaussianBlurCanvas.width;
+
+	curveCanvas.parentElement.width = gaussianBlurCanvas.parentElement.clientWidth - gaussianBlurCanvas.width;
+	curveCanvas.width = curveCanvas.parentElement.width - 7;
+	curveCanvas.height = gaussianBlurCanvas.height - gaussianBlurControlsTable.clientHeight;
+
+	gaussianBlurContext.drawImage(originalBitmap,0,0,gaussianBlurCanvas.width,gaussianBlurCanvas.height);
+	inputImageData = gaussianBlurContext.getImageData(0,0,gaussianBlurCanvas.width,gaussianBlurCanvas.height);
+	UpdateFigures();
+};
+
+image.onload = function() {
+	createImageBitmap(this,0,0,this.width,this.height).then(function(bitmap) {
+		originalBitmap = bitmap;
+		LayoutFigures();
+	});
+};
+image.src = "{{ "/assets/sudokusolverar/cannydemosrc.jpg" | relative_url }}";
+
+window.addEventListener("resize",LayoutFigures,true);
+
+</script>

@@ -23,7 +23,7 @@ The source code for a complete working example can found on the [Sudoku Solver A
 3. [A Crash Course in Image Processing]({% post_url 2017-08-03-sudoku-solver-ar-part-3-a-crash-course-in-image-processing %})
 4. [Camera Capture (Linux)]({% post_url 2017-08-10-sudoku-solver-ar-part-4-camera-capture-linux %})
 5. [Camera Capture (Windows)]({% post_url 2017-08-17-sudoku-solver-ar-part-5-camera-capture-windows %})
-6. Canny Part 1 (Gaussian)
+6. [Canny Part 1 (Gaussian Blur)]({% post_url 2017-08-31-sudoku-solver-ar-part-6-canny-part-1-gaussian-blur %})
 7. Canny Part 2 (Sobel)
 8. Canny Part 3 (Non-Maximum Suppression)
 9. Canny Part 4 (Connectivity Analysis)
