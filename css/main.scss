@@ -47,12 +47,20 @@ a:visited {
 	color: #af3537;
 }
 
-h3 {
+h3, h4 {
 	color: #C01700;
 }
 
 li > ul {
 	margin-bottom: $spacing-unit / 2;
+}
+
+ol > li > ol {
+	list-style-type: lower-alpha;
+}
+
+ol > li > ol > li > ol {
+	list-style-type: lower-roman;
 }
 
 p img {
