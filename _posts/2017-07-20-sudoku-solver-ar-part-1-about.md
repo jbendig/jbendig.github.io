@@ -26,7 +26,7 @@ The source code for a complete working example can found on the [Sudoku Solver A
 6. [Canny Part 1 (Gaussian Blur)]({% post_url 2017-08-31-sudoku-solver-ar-part-6-canny-part-1-gaussian-blur %})
 7. [Canny Part 2 (Sobel)]({% post_url 2017-09-15-sudoku-solver-ar-part-7-canny-part-2-sobel %})
 8. [Canny Part 3 (Non-Maximum Suppression)]({% post_url 2017-09-28-sudoku-solver-ar-part-8-canny-part-3-non-maximum-suppression %})
-9. Canny Part 4 (Connectivity Analysis)
+9. [Canny Part 4 (Connectivity Analysis)]({% post_url 2017-10-16-sudoku-solver-ar-part-9-canny-part-4-connectivity-analysis %})
 10. Hough Transform
 11. Finding Lines
 12. Finding Puzzles
